@@ -1,0 +1,26 @@
+.alert {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+}
+
+.alert-success {
+  color: var(--color-success);
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.alert-warning {
+  color: var(--color-warning);
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.alert-error {
+  color: var(--color-error);
+  background: #fef2f2;
+  border-color: #fecaca;
+}
