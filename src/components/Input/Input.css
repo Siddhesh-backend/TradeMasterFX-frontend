@@ -30,3 +30,8 @@
     background: var(--color-background);
     cursor: not-allowed;
 }
+
+.input-error {
+    margin: 4px 0 0;
+    font-size: 0.85rem;
+}

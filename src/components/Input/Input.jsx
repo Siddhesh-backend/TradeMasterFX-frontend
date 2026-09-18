@@ -8,6 +8,7 @@ function Input({
   onChange,
   placeholder = '',
   disabled = false,
+  error = '',
 }) {
   return (
     <div className="input-group">
@@ -27,6 +28,12 @@ function Input({
         placeholder={placeholder}
         disabled={disabled}
       />
+
+      {error && (
+        <p className="input-error">
+          {error}
+        </p>
+      )}
     </div>
   );
 }
