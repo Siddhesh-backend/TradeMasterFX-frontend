@@ -6,3 +6,9 @@ export const runBacktest = (backtestData) => {
     body: JSON.stringify(backtestData),
   });
 };
+
+export const getAllBacktestRuns = () => {
+  return apiClient('/api/v1/backtest-runs', {
+    method: 'GET',
+  });
+};
