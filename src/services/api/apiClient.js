@@ -7,9 +7,12 @@ export const apiClient = async (endpoint, options = {}) => {
     const token = getToken();
 
     const headers = {
-      'Content-Type': 'application/json',
       ...options.headers,
     };
+
+    if (!(options.body instanceof FormData)) {
+      headers['Content-Type'] = 'application/json';
+    }
 
     if (token) {
       headers.Authorization = `Bearer ${token}`;
@@ -21,10 +24,24 @@ export const apiClient = async (endpoint, options = {}) => {
     });
 
     if (!response.ok) {
-      const error = new Error(`API Error: ${response.status}`);
+      let errorData = null;
+
+      try {
+        errorData = await response.json();
+      } catch {
+        errorData = null;
+      }
+
+      const error = new Error(
+        errorData?.message || `API Error: ${response.status}`
+      );
+
       error.status = response.status;
+      error.data = errorData?.data || null;
+
       throw error;
     }
+
     if (response.status === 204) {
       return null;
     }

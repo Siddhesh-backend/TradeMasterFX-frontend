@@ -1,0 +1,119 @@
+.historical-data-page {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+}
+
+.historical-data-page h1 {
+    margin: 0;
+}
+
+.historical-data-page>p {
+    margin: 0;
+    color: var(--color-text-secondary);
+}
+
+/* Form */
+
+.historical-data-form {
+    display: grid;
+    gap: var(--space-4);
+}
+
+.historical-data-field {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.historical-data-field label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.historical-data-field input,
+.historical-data-field select {
+    width: 100%;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font: inherit;
+    box-sizing: border-box;
+}
+
+.historical-data-field input:focus,
+.historical-data-field select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+/* Symbol selector */
+
+.historical-data-selector {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    max-width: 400px;
+}
+
+.historical-data-selector label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+}
+
+.historical-data-selector select {
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    font: inherit;
+}
+
+/* Table */
+
+.historical-data-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.historical-data-table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+}
+
+.historical-data-table th,
+.historical-data-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-border);
+    white-space: nowrap;
+}
+
+.historical-data-table th {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-primary);
+    background: var(--color-background);
+}
+
+.historical-data-table td {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+    .historical-data-page {
+        gap: var(--space-4);
+    }
+
+    .historical-data-table {
+        min-width: 650px;
+    }
+}
