@@ -1,0 +1,66 @@
+.backtest-run-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+}
+
+.backtest-run-item {
+    padding: var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+}
+
+.backtest-run-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.backtest-run-header h3 {
+    margin: 0;
+}
+
+.backtest-run-status {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    padding: 0.35rem 0.65rem;
+    border-radius: var(--radius-md);
+    background: var(--color-background);
+}
+
+.backtest-run-details {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-2) var(--space-6);
+}
+
+.backtest-run-details p {
+    margin: 0;
+    color: var(--color-text-secondary);
+}
+
+.backtest-run-details strong {
+    color: var(--color-text-primary);
+}
+
+.backtest-run-actions {
+    margin-top: var(--space-4);
+}
+
+.backtest-run-divider {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .backtest-run-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .backtest-run-details {
+        grid-template-columns: 1fr;
+    }
+}
