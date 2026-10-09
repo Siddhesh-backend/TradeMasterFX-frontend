@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 import Alert from '../Alert/Alert';
 import EmptyState from '../EmptyState/EmptyState';
@@ -15,6 +16,8 @@ function BacktestRunList() {
     const [error, setError] = useState('');
     const [executingId, setExecutingId] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
+
+    const navigate = useNavigate();
 
     const loadRuns = async () => {
         try {
@@ -57,6 +60,10 @@ function BacktestRunList() {
         } finally {
             setExecutingId(null);
         }
+    };
+
+    const handleViewAnalytics = (runId) => {
+        navigate(`/analytics?runId=${runId}`);
     };
 
     if (loading) {
@@ -142,8 +149,8 @@ function BacktestRunList() {
                         </p>
                     </div>
 
-                    {run.status === 'CREATED' && (
-                        <div className="backtest-run-actions">
+                    <div className="backtest-run-actions">
+                        {run.status === 'CREATED' && (
                             <Button
                                 type="button"
                                 onClick={() => handleExecute(run)}
@@ -153,8 +160,17 @@ function BacktestRunList() {
                                     ? 'Executing...'
                                     : 'Execute Backtest'}
                             </Button>
-                        </div>
-                    )}
+                        )}
+
+                        {run.status === 'COMPLETED' && (
+                            <Button
+                                type="button"
+                                onClick={() => handleViewAnalytics(run.id)}
+                            >
+                                View Analytics
+                            </Button>
+                        )}
+                    </div>
                 </div>
             ))}
         </div>
