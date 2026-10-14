@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../Loading/Loading';
@@ -8,6 +9,7 @@ import {
     getAllBacktestRuns,
     executeBacktest,
 } from '../../services/api/backtestApi';
+import { generateReport } from '../../services/api/reportApi';
 import './BacktestRunList.css';
 
 function BacktestRunList() {
@@ -15,6 +17,7 @@ function BacktestRunList() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [executingId, setExecutingId] = useState(null);
+    const [reportingId, setReportingId] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
 
     const navigate = useNavigate();
@@ -23,14 +26,10 @@ function BacktestRunList() {
         try {
             setLoading(true);
             setError('');
-
             const data = await getAllBacktestRuns();
-
             setRuns(Array.isArray(data) ? data : []);
         } catch (error) {
-            setError(
-                error.message || 'Unable to load backtest runs.'
-            );
+            setError(error.message || 'Unable to load backtest runs.');
         } finally {
             setLoading(false);
         }
@@ -47,18 +46,29 @@ function BacktestRunList() {
             setSuccessMessage('');
 
             const response = await executeBacktest(run.id);
-
-            setSuccessMessage(
-                response?.message || 'Backtest executed successfully.'
-            );
-
+            setSuccessMessage(response?.message || 'Backtest executed successfully.');
             await loadRuns();
         } catch (error) {
-            setError(
-                error.message || 'Unable to execute backtest.'
-            );
+            setError(error.message || 'Unable to execute backtest.');
         } finally {
             setExecutingId(null);
+        }
+    };
+
+    const handleGenerateReport = async (run) => {
+        try {
+            setReportingId(run.id);
+            setError('');
+            setSuccessMessage('');
+
+            const report = await generateReport(run.id);
+
+            setSuccessMessage('Report generated successfully.');
+            navigate('/reports', { state: { generatedReport: report } });
+        } catch (error) {
+            setError(error.message || 'Unable to generate report.');
+        } finally {
+            setReportingId(null);
         }
     };
 
@@ -66,9 +76,7 @@ function BacktestRunList() {
         navigate(`/analytics?runId=${runId}`);
     };
 
-    if (loading) {
-        return <Loading />;
-    }
+    if (loading) return <Loading />;
 
     if (error && runs.length === 0) {
         return <Alert type="error" message={error} />;
@@ -85,68 +93,24 @@ function BacktestRunList() {
 
     return (
         <div className="backtest-run-list">
-            {successMessage && (
-                <Alert
-                    type="success"
-                    message={successMessage}
-                />
-            )}
-
-            {error && (
-                <Alert
-                    type="error"
-                    message={error}
-                />
-            )}
+            {successMessage && <Alert type="success" message={successMessage} />}
+            {error && <Alert type="error" message={error} />}
 
             {runs.map((run) => (
-                <div
-                    className="backtest-run-item"
-                    key={run.id}
-                >
+                <div className="backtest-run-item" key={run.id}>
                     <div className="backtest-run-header">
                         <h3>{run.runName}</h3>
-
-                        <span className="backtest-run-status">
-                            {run.status}
-                        </span>
+                        <span className="backtest-run-status">{run.status}</span>
                     </div>
 
                     <div className="backtest-run-details">
-                        <p>
-                            <strong>Strategy:</strong>{' '}
-                            {run.strategyName}
-                        </p>
-
-                        <p>
-                            <strong>Symbol:</strong>{' '}
-                            {run.symbol}
-                        </p>
-
-                        <p>
-                            <strong>Timeframe:</strong>{' '}
-                            {run.timeframe}
-                        </p>
-
-                        <p>
-                            <strong>Initial Capital:</strong>{' '}
-                            {run.initialCapital}
-                        </p>
-
-                        <p>
-                            <strong>Risk:</strong>{' '}
-                            {run.riskPercentage}%
-                        </p>
-
-                        <p>
-                            <strong>Total Trades:</strong>{' '}
-                            {run.totalTrades}
-                        </p>
-
-                        <p>
-                            <strong>Total Profit/Loss:</strong>{' '}
-                            {run.totalProfitLoss}
-                        </p>
+                        <p><strong>Strategy:</strong> {run.strategyName}</p>
+                        <p><strong>Symbol:</strong> {run.symbol}</p>
+                        <p><strong>Timeframe:</strong> {run.timeframe}</p>
+                        <p><strong>Initial Capital:</strong> {run.initialCapital}</p>
+                        <p><strong>Risk:</strong> {run.riskPercentage}%</p>
+                        <p><strong>Total Trades:</strong> {run.totalTrades}</p>
+                        <p><strong>Total Profit/Loss:</strong> {run.totalProfitLoss}</p>
                     </div>
 
                     <div className="backtest-run-actions">
@@ -154,21 +118,29 @@ function BacktestRunList() {
                             <Button
                                 type="button"
                                 onClick={() => handleExecute(run)}
-                                disabled={executingId !== null}
+                                disabled={executingId !== null || reportingId !== null}
                             >
-                                {executingId === run.id
-                                    ? 'Executing...'
-                                    : 'Execute Backtest'}
+                                {executingId === run.id ? 'Executing...' : 'Execute Backtest'}
                             </Button>
                         )}
 
                         {run.status === 'COMPLETED' && (
-                            <Button
-                                type="button"
-                                onClick={() => handleViewAnalytics(run.id)}
-                            >
-                                View Analytics
-                            </Button>
+                            <>
+                                <Button
+                                    type="button"
+                                    onClick={() => handleViewAnalytics(run.id)}
+                                >
+                                    View Analytics
+                                </Button>
+
+                                <Button
+                                    type="button"
+                                    onClick={() => handleGenerateReport(run)}
+                                    disabled={reportingId !== null}
+                                >
+                                    {reportingId === run.id ? 'Generating...' : 'Generate Report'}
+                                </Button>
+                            </>
                         )}
                     </div>
                 </div>
